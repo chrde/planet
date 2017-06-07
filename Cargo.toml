@@ -5,6 +5,11 @@ authors = ["Christian de la Hoz <apigolas@gmail.com>"]
 
 [dependencies]
 piston = "0.32.0"
-piston2d-graphics = "0.21.1"
+piston_window = "0.66.0"
 pistoncore-glutin_window = "0.37.0"
 piston2d-opengl_graphics = "0.43.0"
+noise = "0.4.1"
+gfx = "0.16.0"
+gfx_device_gl = "0.14.1"
+shader_version = "0.2.2"
+camera_controllers = "0.21.0"
