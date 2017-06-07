@@ -58,7 +58,7 @@ impl App {
 fn main() {
     let opengl = OpenGL::V3_2;
     let random = random::RandomGenerator::new();
-    let mut window: PistonWindow = WindowSettings::new("planet", [200, 200])
+    let mut window: PistonWindow = WindowSettings::new("planet", [1200, 1200])
         .opengl(opengl)
         .exit_on_esc(true)
         .build()
@@ -72,15 +72,25 @@ fn main() {
 
     let mut events = Events::new(EventSettings::new());
 
-    let vertex_data: Vec<Vertex> = glsl::icosahedron::VERTICES.iter()
-        .map(|v| {
+    let temp_vertex_data: Vec<Vertex> = glsl::icosahedron::VERTICES.iter().enumerate()
+        .map(|(i, v)| {
             let (x, y, z) = (v[0] as f32, v[1] as f32, v[2] as f32);
-            Vertex::new([x, y, z])
+            Vertex::new([x, y, z], [0.0, 0.0, 0.0])
         })
         .collect();
 
-    let index_data: Vec<u16> = glsl::icosahedron::TRIANGLE_LIST.iter()
-        .flat_map(|t| vec![t[0], t[1], t[2]])
+    let mut vertex_data: Vec<Vertex> = Vec::new();
+    let index_data: Vec<u16> = glsl::icosahedron::TRIANGLE_LIST.iter().enumerate()
+        .flat_map(|(i, t)| {
+            let f = vertex_data.len();
+            for v in 0..t.len() {
+                let mut colored_vertex = temp_vertex_data[t[v]].clone();
+                colored_vertex.a_color = glsl::icosahedron::RAINBOW[i / 2];
+                vertex_data.push(colored_vertex);
+            }
+            vec![f, f+1, f+2,]
+            }
+        )
         .map(|v| v as u16)
         .collect();
 
@@ -168,13 +178,15 @@ fn main() {
 gfx_vertex_struct!(Vertex {
     a_pos: [f32; 4] = "a_pos",
     a_tex_coord: [i8; 2] = "a_tex_coord",
+    a_color: [f32; 3] = "a_color",
 });
 
 impl Vertex {
-    fn new(pos: [f32; 3]) -> Vertex {
+    fn new(pos: [f32; 3], color: [f32; 3]) -> Vertex {
         Vertex {
             a_pos: [pos[0], pos[1], pos[2], 1.0],
             a_tex_coord: [0, 0],
+            a_color: color
         }
     }
 }
