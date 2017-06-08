@@ -7,8 +7,6 @@ extern crate gfx_device_gl;
 extern crate shader_version;
 extern crate camera_controllers;
 extern crate vecmath;
-extern crate half_edge_mesh;
-extern crate cgmath;
 
 use piston::window::WindowSettings;
 use piston::event_loop::*;
@@ -19,7 +17,6 @@ use shader_version::Shaders;
 use shader_version::glsl::GLSL;
 use gfx::traits::*;
 use camera_controllers::*;
-use cgmath::Point3;
 
 mod random;
 mod glsl;
@@ -74,9 +71,6 @@ fn main() {
     };
 
     let mut events = Events::new(EventSettings::new());
-
-    let mesh = globe::Globe::load_mesh();
-    println!("{} {} {}", mesh.edges.len(), mesh.vertices.len(), mesh.faces.len());
 
     let globe = globe::Globe::new_example();
 
