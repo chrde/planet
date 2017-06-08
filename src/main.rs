@@ -7,6 +7,8 @@ extern crate gfx_device_gl;
 extern crate shader_version;
 extern crate camera_controllers;
 extern crate vecmath;
+extern crate half_edge_mesh;
+extern crate cgmath;
 
 use piston::window::WindowSettings;
 use piston::event_loop::*;
@@ -17,21 +19,23 @@ use shader_version::Shaders;
 use shader_version::glsl::GLSL;
 use gfx::traits::*;
 use camera_controllers::*;
+use cgmath::Point3;
 
 mod random;
 mod glsl;
+mod globe;
+mod chunk;
 
 pub struct App {
     gl: GlGraphics,
     t: f64,
-    rnd: random::RandomGenerator,
 }
 
 impl App {
     fn render(&mut self, args: &RenderArgs) {
 
         const GREEN: [f32; 4] = [0.0, 1.0, 0.0, 1.0];
-        let random_number = self.rnd.next(self.t) as f32;
+        let random_number = 0.5;
         let color: [f32; 4] = [random_number, random_number, random_number, 1.0];
 
         let square = rectangle::square(0.0, 0.0, 50.0);
@@ -57,7 +61,7 @@ impl App {
 
 fn main() {
     let opengl = OpenGL::V3_2;
-    let random = random::RandomGenerator::new();
+    let random = random::RandomGenerator::new(12);
     let mut window: PistonWindow = WindowSettings::new("planet", [1200, 1200])
         .opengl(opengl)
         .exit_on_esc(true)
@@ -67,32 +71,16 @@ fn main() {
     let mut app = App {
         gl: GlGraphics::new(opengl),
         t: 0.0,
-        rnd: random,
     };
 
     let mut events = Events::new(EventSettings::new());
 
-    let temp_vertex_data: Vec<Vertex> = glsl::icosahedron::VERTICES.iter().enumerate()
-        .map(|(i, v)| {
-            let (x, y, z) = (v[0] as f32, v[1] as f32, v[2] as f32);
-            Vertex::new([x, y, z], [0.0, 0.0, 0.0])
-        })
-        .collect();
+    let mesh = globe::Globe::load_mesh();
+    println!("{} {} {}", mesh.edges.len(), mesh.vertices.len(), mesh.faces.len());
 
-    let mut vertex_data: Vec<Vertex> = Vec::new();
-    let index_data: Vec<u16> = glsl::icosahedron::TRIANGLE_LIST.iter().enumerate()
-        .flat_map(|(i, t)| {
-            let f = vertex_data.len();
-            for v in 0..t.len() {
-                let mut colored_vertex = temp_vertex_data[t[v]].clone();
-                colored_vertex.a_color = glsl::icosahedron::RAINBOW[i / 2];
-                vertex_data.push(colored_vertex);
-            }
-            vec![f, f+1, f+2,]
-            }
-        )
-        .map(|v| v as u16)
-        .collect();
+    let globe = globe::Globe::new_example();
+
+    let (vertex_data, index_data) = globe.make_geometry();
 
     let ref mut factory = window.factory.clone();
 
@@ -175,11 +163,13 @@ fn main() {
     }
 }
 
-gfx_vertex_struct!(Vertex {
+gfx_vertex_struct!(_Vertex {
     a_pos: [f32; 4] = "a_pos",
     a_tex_coord: [i8; 2] = "a_tex_coord",
     a_color: [f32; 3] = "a_color",
 });
+
+pub type Vertex = _Vertex;
 
 impl Vertex {
     fn new(pos: [f32; 3], color: [f32; 3]) -> Vertex {

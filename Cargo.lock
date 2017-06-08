@@ -3,8 +3,10 @@ name = "planets"
 version = "0.1.0"
 dependencies = [
  "camera_controllers 0.21.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "cgmath 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "gfx 0.16.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "gfx_device_gl 0.14.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "half_edge_mesh 1.0.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "noise 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "piston 0.32.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "piston2d-opengl_graphics 0.43.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -22,6 +24,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "android_glue"
 version = "0.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "approx"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -91,6 +98,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "gleam 0.4.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.2.23 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "cgmath"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "num-traits 0.1.37 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rand 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rustc-serialize 0.3.24 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -358,6 +375,15 @@ dependencies = [
  "winapi 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "winit 0.6.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "x11-dl 2.14.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "half_edge_mesh"
+version = "1.0.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "approx 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "cgmath 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -1061,6 +1087,7 @@ dependencies = [
 [metadata]
 "checksum adler32 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "3ff33fe13a08dbce05bcefa2c68eea4844941437e33d6f808240b54d7157b9cd"
 "checksum android_glue 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)" = "d8289e9637439939cc92b1995b0972117905be88bc28116c86b64d6e589bcd38"
+"checksum approx 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)" = "08abcc3b4e9339e33a3d0a5ed15d84a687350c05689d825e0f6655eef9e76a94"
 "checksum arrayvec 0.3.23 (registry+https://github.com/rust-lang/crates.io-index)" = "699e63a93b79d717e8c3b5eb1b28b7780d0d6d9e59a72eb769291c83b0c8dc67"
 "checksum bitflags 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)" = "32866f4d103c4e438b1db1158aa1b1a80ee078e5d77a59a2f906fd62a577389c"
 "checksum bitflags 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)" = "aad18937a628ec6abcd26d1489012cc0e18c21798210f491af69ded9b881106d"
@@ -1071,6 +1098,7 @@ dependencies = [
 "checksum camera_controllers 0.21.0 (registry+https://github.com/rust-lang/crates.io-index)" = "2ba9723e917e4660248537f92fc0181dfc3da830773e41b29b20082d6bcb5c42"
 "checksum cgl 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)" = "8bdd78cca65a739cb5475dbf6b6bbb49373e327f4a6f2b499c0f98632df38c10"
 "checksum cgl 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "86765cb42c2a2c497e142af72517c1b4d7ae5bb2f25dfa77a5c69642f2342d89"
+"checksum cgmath 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)" = "6747adb0788e656a379f782b039dae6571be0b157fab45ba9b429a49e600f669"
 "checksum cocoa 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)" = "3afe4613f57a171039a98db1773f5840b5743cf85aaf03afb65ddfade4f4a9db"
 "checksum cocoa 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)" = "1e1be5fd98bb7e8ef0eea233a4984f4e85ecdcfa002a90b8b12b7a20faf44dc1"
 "checksum color_quant 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "a475fc4af42d83d28adf72968d9bcfaf035a1a9381642d8e85d8a04957767b0d"
@@ -1100,6 +1128,7 @@ dependencies = [
 "checksum gleam 0.2.32 (registry+https://github.com/rust-lang/crates.io-index)" = "9590e0e578d528a080c5abac678e7efbe349a73c7316faafd4073edf5f462d01"
 "checksum gleam 0.4.5 (registry+https://github.com/rust-lang/crates.io-index)" = "a86944a6a4d7f54507f8ee930192d971f18a7b1da526ff529b7a0d4043935380"
 "checksum glutin 0.8.1 (registry+https://github.com/rust-lang/crates.io-index)" = "96e2709d0ef40d5e8534b35a0533fd163740401f0c3f1741831833e5d1f74118"
+"checksum half_edge_mesh 1.0.8 (registry+https://github.com/rust-lang/crates.io-index)" = "69e85a296743138a856ccc431330cfef48a79b21ad1e6b77974b627a824b5e5a"
 "checksum image 0.13.0 (registry+https://github.com/rust-lang/crates.io-index)" = "1c3f4f5ea213ed9899eca760a8a14091d4b82d33e27cf8ced336ff730e9f6da8"
 "checksum inflate 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "d1238524675af3938a7c74980899535854b88ba07907bb1c944abe5b8fc437e5"
 "checksum interpolation 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "84e53e2877f735534c2d3cdbb5ba1d04ee11107f599a1e811ab0ff3dd93fe66e"
