@@ -5,6 +5,7 @@ use glsl::icosahedron;
 use chunk::{IntCoord, Chunk, Cell, CellPos, Root};
 use half_edge_mesh::mesh::HalfEdgeMesh;
 use self::cgmath::Point3;
+use std::collections::HashSet;
 
 const ROOT_QUADS: u8 = 10;
 
@@ -49,7 +50,7 @@ impl Globe {
                    })
     }
 
-    pub fn load_mesh() -> ::half_edge_mesh::HalfEdgeMesh{
+    pub fn load_mesh() -> ::half_edge_mesh::HalfEdgeMesh {
         let vertex: Vec<Point3<f32>> = icosahedron::VERTICES
             .iter()
             .map(|v: &[f64; 3]| {
@@ -57,11 +58,28 @@ impl Globe {
                      Point3::new(x, y, z)
                  })
             .collect();
-        
+
         HalfEdgeMesh::from_face_vertex_mesh(&vertex[..], &icosahedron::TRIANGLE_LIST)
     }
 
     pub fn make_geometry(&self) -> (Vec<::Vertex>, Vec<u16>) {
+
+        let mesh = Globe::load_mesh();
+        let mut colored_vertexx = HashSet::new();
+
+        let vertex : Vec<::Vertex> = vec![];
+
+        for (id, face) in &mesh.faces{
+          if!colored_vertexx.contains(id){
+            colored_vertexx.insert(id);
+            for f in  face.borrow().adjacent_faces(){
+              let neighbor_face = f.upgrade().unwrap().borrow();
+              if !colored_vertexx.contains(&neighbor_face.id) {
+                let () = face;
+              }
+            }
+          }
+        }
 
         let temp_vertex_data: Vec<::Vertex> = icosahedron::VERTICES
             .iter()
