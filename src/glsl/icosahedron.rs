@@ -1,6 +1,6 @@
 // const phi: f64 = (1.0 + 5.0f64.sqrt()) / 2.0;
 // const s: f64 = (1.0 + phi.powi(2)).sqrt().recip();
-// https://stackoverflow.com/questions/20850279/incorrectly-rendering-isocahedron-in-opengl
+// http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
 // TODO: half-edge-mesh to calculate qua automatically!!!
 const PHI: f64 = 1.618033988749895;
 const S: f64 = 0.5257311121191336;
@@ -19,26 +19,27 @@ pub const VERTICES: [[f64; 3]; 12] = [[-S, X, 0.0],
                                       [-X, 0.0, -S],
                                       [-X, 0.0, S]];
 
-pub const TRIANGLE_LIST: [[usize; 3]; 20] = [[0, 11, 5], //0
-                                             [5, 11, 4], //0
+pub const TRIANGLE_LIST: [[usize; 3]; 20] = [[0, 11, 5],//0
+                                             [4, 11, 5],//0
                                              [0, 10, 11],//1
-                                             [11, 10, 2],//1
+                                             [2, 10, 11],//1
                                              [0, 7, 10],//2
-                                             [10, 7, 6],//2
+                                             [6, 7, 10],//2
                                              [0, 1, 7],//3
-                                             [7, 1, 8],//3
+                                             [8, 1, 7],//3
                                              [0, 5, 1],//4
-                                             [1, 5, 9],//4
-                                             [4, 9, 5], //0
-                                             [3, 9, 4], //0
+                                             [9, 5, 1],//4
+                                             [4, 9, 5],//0
+                                             [4, 9, 3],//0
                                              [2, 4, 11],//1
-                                             [3, 4, 2],//1
-                                             [3, 6, 8],//2
-                                             [8, 6, 7],//2
-                                             [6, 2, 10],//3
-                                             [3, 2, 6],//3
-                                             [3, 8, 9],//4
-                                             [9, 8, 1]];//4
+                                             [2, 4, 3],//1
+                                             [6, 2, 10],//2
+                                             [6, 2, 3],//2
+                                             [8, 6, 7],//3
+                                             [8, 6, 3],//3
+                                             [9, 8, 1],//4
+                                             [9, 8, 3],//4
+                                             ];
 
 pub const RAINBOW: [[f32; 3]; 10] = [[1.0, 0.0, 0.0],
                                      [1.0, 1.0, 0.0],

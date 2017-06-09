@@ -7,6 +7,7 @@ extern crate gfx_device_gl;
 extern crate shader_version;
 extern crate camera_controllers;
 extern crate vecmath;
+extern crate nalgebra;
 
 use piston::window::WindowSettings;
 use piston::event_loop::*;

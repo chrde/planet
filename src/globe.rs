@@ -1,8 +1,10 @@
 use random;
 use glsl::icosahedron;
-use chunk::{IntCoord, Chunk, Cell, CellPos, Root};
+use chunk::{IntCoord, Chunk, Cell, CellPos, Root, ROOT_QUADS};
+use ::nalgebra::{Point2, Point3};
 
-const ROOT_QUADS: u8 = 10;
+type Pt2 = Point2<f64>;
+type Pt3 = Point3<f64>;
 
 pub struct Spec {
     seed: usize,
@@ -82,7 +84,7 @@ impl Globe {
     fn create_chunks(&mut self) {
         let chunks_per_root = self.spec.root_resolution / self.spec.chunk_resolution;
         for root in 0..ROOT_QUADS {
-            let root = Root { index: root };
+            let root = Root::new(root);
             for y in 0..chunks_per_root {
                 for x in 0..chunks_per_root {
                     let origin = CellPos {
@@ -108,5 +110,62 @@ impl Globe {
             }
         }
     }
+
+    pub fn project_to_world(root: Root, mut pt_in_root_quad: Pt2) -> Pt3 {
+      // TODO : use half-edge-mesh to calculate this automatically instead of
+      // relying on hardcoded order of icosahedron triangles
+      // TODO : think about keeping positive x in [a,b,c,d] and negative x in [c,d,e,f]
+      // and similar for y coordinates
+      /*
+      
+          *a
+
+      *b      *c
+
+          *d      *e
+
+              *f
+      Assumptions:
+      -5 root quads (0, 4),
+      -i_north triangle contains [a, b, c]
+      -i_south triangle contains [d, e, f]
+      -inner triangles: [d, b, c], [d, e, c]
+      */
+      let (i_north, i_south) = (root.index() as usize * 2, root.index() as usize * 2 +11 );
+      assert!(i_north > 0 && i_north < 10 && i_north % 2 == 0);
+      assert!(i_south > 10 && i_south < 19 && i_south % 2 == 1);
+      let (north_triangle, south_triangle) = (icosahedron::TRIANGLE_LIST[i_north], icosahedron::TRIANGLE_LIST[i_south]);
+      //TODO Pt3::from(slice) Pt3 seems broken atm
+      //TODO assert correct order of intermediate triangles
+      let (a, b, c) = Globe::triangle_to_points(i_north);
+      let (d, e, f) = Globe::triangle_to_points(i_south);
+      let point = if pt_in_root_quad.x + pt_in_root_quad.y < 0.5 {
+        //triangle abc
+        a + (b-a)*pt_in_root_quad.x + (c-a)*pt_in_root_quad.y
+      } else if pt_in_root_quad.y < 0.5 {
+        //triangle bcd
+        pt_in_root_quad.x = pt_in_root_quad.x - 0.5;
+        pt_in_root_quad.y = pt_in_root_quad.y - 0.5;
+          d + (c - d) * pt_in_root_quad.x + (b - d) * pt_in_root_quad.y
+      } else if pt_in_root_quad.x + pt_in_root_quad.y < 1.0 {
+        pt_in_root_quad.y = pt_in_root_quad.y - 0.5;
+        c + (d -c) * pt_in_root_quad.x + (e - c) * pt_in_root_quad.y
+        //triangle cde
+      } else {
+        unreachable!()
+        //triangle def
+      };
+      point
+    }
+
+    fn triangle_to_points(triangle_index: usize) -> (Pt3, Pt3, Pt3) {
+      let triangle = icosahedron::TRIANGLE_LIST[triangle_index];
+      let x: Vec<Pt3> = triangle.into_iter().map(|p| {
+        let vertex = icosahedron::VERTICES[p.clone()];
+        Pt3::new(vertex[0], vertex[1], vertex[2])
+      }).collect();
+      (x[0], x[1], x[2])
+    }
+
 }
 
