@@ -19,4 +19,3 @@ impl RandomGenerator {
         self.fbm.get(vs)
     }
 }
-

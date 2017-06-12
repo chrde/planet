@@ -4,32 +4,31 @@ pub const ROOT_QUADS: u8 = 5;
 
 #[derive(Clone)]
 pub struct Root {
-  index: RootIndex,
+    index: RootIndex,
 }
 
 impl Root {
-  pub fn new(index: RootIndex) -> Self {
-    assert!(index < ROOT_QUADS);
-    Root { index: index}
-  }
+    pub fn new(index: RootIndex) -> Self {
+        assert!(index < ROOT_QUADS);
+        Root { index: index }
+    }
 
-  pub fn index(&self) -> RootIndex {
-    self.index
-  }
-
+    pub fn index(&self) -> RootIndex {
+        self.index
+    }
 }
 
 pub struct CellPos {
-  pub root: Root,
-  pub x: IntCoord,
-  pub y: IntCoord,
+    pub root: Root,
+    pub x: IntCoord,
+    pub y: IntCoord,
 }
 
 pub struct Cell {
-  pub height: f64,
+    pub height: f64,
 }
 
 pub struct Chunk {
-  pub origin: CellPos,
-  pub cells: Vec<Cell>,
+    pub origin: CellPos,
+    pub cells: Vec<Cell>,
 }

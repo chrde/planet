@@ -43,9 +43,7 @@ impl App {
             // Clear the screen.
             clear(GREEN, gl);
 
-            let transform = c.transform
-                .trans(x, y)
-                .trans(-25.0, -25.0);
+            let transform = c.transform.trans(x, y).trans(-25.0, -25.0);
 
             // Draw a box rotating around the middle of the screen.
             rectangle(color, square, transform, gl);
@@ -79,8 +77,8 @@ fn main() {
 
     let ref mut factory = window.factory.clone();
 
-    let (vbuf, slice) =
-        factory.create_vertex_buffer_with_slice(&vertex_data, index_data.as_slice());
+    let (vbuf, slice) = factory
+        .create_vertex_buffer_with_slice(&vertex_data, index_data.as_slice());
 
     let texels = [[0xFF, 0xFF, 0x00, 0x00]];
 
@@ -91,12 +89,11 @@ fn main() {
     let get_projection = |w: &PistonWindow| {
         let draw_size = w.window.draw_size();
         CameraPerspective {
-                fov: 90.0,
-                near_clip: 0.1,
-                far_clip: 1000.0,
-                aspect_ratio: (draw_size.width as f32) / (draw_size.height as f32),
-            }
-            .projection()
+            fov: 90.0,
+            near_clip: 0.1,
+            far_clip: 1000.0,
+            aspect_ratio: (draw_size.width as f32) / (draw_size.height as f32),
+        }.projection()
     };
 
     let mut projection = get_projection(&window);
@@ -114,7 +111,8 @@ fn main() {
     };
 
     let glsl = opengl.to_glsl();
-    let pso = factory.create_pipeline_simple(Shaders::new()
+    let pso = factory
+        .create_pipeline_simple(Shaders::new()
                                     .set(GLSL::V1_50, include_str!("glsl/shaders/cube_150.glslv"))
                                     .get(glsl)
                                     .unwrap()
@@ -140,13 +138,15 @@ fn main() {
         window.draw_3d(&e, |window| {
             let args = e.render_args().unwrap();
 
-            window.encoder.clear(&window.output_color, [0.3, 0.3, 0.3, 1.0]);
+            window
+                .encoder
+                .clear(&window.output_color, [0.3, 0.3, 0.3, 1.0]);
             window.encoder.clear_depth(&window.output_stencil, 1.0);
 
-            data.u_model_view_proj = model_view_projection(model,
-                                                           first_person.camera(args.ext_dt)
-                                                               .orthogonal(),
-                                                           projection);
+            data.u_model_view_proj =
+                model_view_projection(model,
+                                      first_person.camera(args.ext_dt).orthogonal(),
+                                      projection);
             window.encoder.draw(&slice, &pso, &data);
         });
 
@@ -159,10 +159,10 @@ fn main() {
 }
 
 gfx_vertex_struct!(_Vertex {
-    a_pos: [f32; 4] = "a_pos",
-    a_tex_coord: [i8; 2] = "a_tex_coord",
-    a_color: [f32; 3] = "a_color",
-});
+                       a_pos: [f32; 4] = "a_pos",
+                       a_tex_coord: [i8; 2] = "a_tex_coord",
+                       a_color: [f32; 3] = "a_color",
+                   });
 
 pub type Vertex = _Vertex;
 
@@ -171,7 +171,7 @@ impl Vertex {
         Vertex {
             a_pos: [pos[0], pos[1], pos[2], 1.0],
             a_tex_coord: [0, 0],
-            a_color: color
+            a_color: color,
         }
     }
 }
