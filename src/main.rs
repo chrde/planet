@@ -8,6 +8,7 @@ extern crate shader_version;
 extern crate camera_controllers;
 extern crate vecmath;
 extern crate nalgebra;
+extern crate rand;
 
 use piston::window::WindowSettings;
 use piston::event_loop::*;
