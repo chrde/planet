@@ -1,23 +1,20 @@
 // const phi: f64 = (1.0 + 5.0f64.sqrt()) / 2.0;
-// const s: f64 = (1.0 + phi.powi(2)).sqrt().recip();
 // http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
-// TODO: half-edge-mesh to calculate qua automatically!!!
+// TODO: half-edge-mesh to calculate quads automatically!!!
 const PHI: f64 = 1.618033988749895;
-pub const S: f64 = 0.5257311121191336;
-pub const X: f64 = PHI * S;
 
-pub const VERTICES: [[f64; 3]; 12] = [[-S, X, 0.0],
-                                      [S, X, 0.0],
-                                      [-S, -X, 0.0],
-                                      [S, -X, 0.0],
-                                      [0.0, -S, X],
-                                      [0.0, S, X],
-                                      [0.0, -S, -X],
-                                      [0.0, S, -X],
-                                      [X, 0.0, -S],
-                                      [X, 0.0, S],
-                                      [-X, 0.0, -S],
-                                      [-X, 0.0, S]];
+pub const VERTICES: [[f64; 3]; 12] = [[-1.0, PHI, 0.0],
+                                      [1.0, PHI, 0.0],
+                                      [-1.0, -PHI, 0.0],
+                                      [1.0, -PHI, 0.0],
+                                      [0.0, -1.0, PHI],
+                                      [0.0, 1.0, PHI],
+                                      [0.0, -1.0, -PHI],
+                                      [0.0, 1.0, -PHI],
+                                      [PHI, 0.0, -1.0],
+                                      [PHI, 0.0, 1.0],
+                                      [-PHI, 0.0, -1.0],
+                                      [-PHI, 0.0, 1.0]];
 
 pub const TRIANGLE_LIST: [[usize; 3]; 20] = [[0, 11, 5],//0
                                              [4, 11, 5],//0

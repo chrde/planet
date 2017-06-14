@@ -135,6 +135,13 @@ fn main() {
         //     app.update(&u);
         // }
         first_person.event(&e);
+        if let Some(Button::Keyboard(key)) = e.press_args(){
+            if key == Key::Up {
+                println!("+");
+            } else if key == Key::Down {
+                println!("-");
+            }
+        }
 
         window.draw_3d(&e, |window| {
             let args = e.render_args().unwrap();

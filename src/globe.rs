@@ -1,3 +1,4 @@
+use std::mem;
 use random;
 use glsl::icosahedron;
 use chunk::{IntCoord, Chunk, Cell, CellPos, Root, ROOT_QUADS};
@@ -38,7 +39,7 @@ impl Globe {
                        seed: 42,
                        radius: 1.2,
                        chunks_per_root_side: 4,
-                       resolution: 1,
+                       resolution: 3,
                        cells_per_chunk: 1,
                    })
     }
@@ -61,41 +62,26 @@ impl Globe {
     }
 
     pub fn make_geometry(&self) -> (Vec<::Vertex>, Vec<u16>) {
-        let mut vertex_data: Vec<::Vertex> = Vec::new();
-        let mut index_data: Vec<u16> = Vec::new();
-        // let a: Pt2 = Pt2::from_coordinates(&[0.0, 0.0].to_owned().into());
         let mut triangles: Vec<[Pt2; 3]> = vec![];
-        // let root = Root::new(root_index);
-        // for y in 0..self.spec.chunks_per_root_side {
-        //     for x in 0..self.spec.chunks_per_root_side {
-        //         let origin = CellPos {
-        //             root: root.clone(),
-        //             x: x * self.spec.chunks_per_root_side,
-        //             y: y * self.spec.chunks_per_root_side,
-        //         };
-        //         self.make_geometry_chunk(origin, &mut vertex_data, &mut index_data);
-        //     }
-        // }
-        //TODO: handle spec.resolution
         for triangle in icosahedron::VERTEX_IN_ROOT.iter() {
             let a = Pt2::from_coordinates(triangle[0].into());
             let b = Pt2::from_coordinates(triangle[1].into());
             let c = Pt2::from_coordinates(triangle[2].into());
-            triangles.extend(self.split_triangle(&[a, b, c]));
+            triangles.push([a, b, c]);
         }
-        if (self.spec.resolution > 1) {
-            let x = triangles;
-            triangles = vec![];
-            for triangle in &x {
+        for _ in 0..self.spec.resolution {
+            let mut temp = mem::replace(&mut triangles, vec![]);
+            for triangle in &temp {
                 triangles.extend(self.split_triangle(triangle));
             }
         }
 
+        let mut vertex_data: Vec<::Vertex> = Vec::new();
+        let mut index_data: Vec<u16> = Vec::new();
         for root_index in 0..ROOT_QUADS {
             for triangle in triangles.iter() {
                 for point in triangle.iter() {
                     let pt3 = Globe::project_to_world(&Root::new(root_index), point);
-                    //   Pt2::from_coordinates(point.to_owned().into()));
                     let mut root_color = icosahedron::RAINBOW[root_index as usize];
                     for mut color_channel in root_color.iter_mut() {
                         *color_channel *= rand::random();
@@ -214,11 +200,7 @@ impl Globe {
             pt_in_root_quad.y = 1.0 - pt_in_root_quad.y;
             f + (e - f) * pt_in_root_quad.x + (d - f) * pt_in_root_quad.y
         };
-        let a: Vector3<f64> = nalgebra::normalize(&point.coords);
-        // nalgebra::normalize(x);
-        let b = Pt3::from_coordinates(a);
-        println!("{} - {}", point, b);
-        b
+        Pt3::from_coordinates(nalgebra::normalize(&point.coords))
     }
 
     fn icosahedron_triangle_to_points(triangle_index: usize) -> (Pt3, Pt3, Pt3) {
